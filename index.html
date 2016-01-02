@@ -80,6 +80,102 @@
   <div class="post-content">
     <header>
       
+        <time datetime="2016-01-02T12:08:49.000Z"><a href="/2016/01/02/Python代码简洁之道/">2016-01-02</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/01/02/Python代码简洁之道/">Python代码简洁之道</a></h1>
+  
+
+    </header>
+    <div class="entry">
+		<p>在Python中，代码不是越多越好，而是越少越好。代码不是越复杂越好，而是越简单越好。1行代码能实现的功能，决不写2行代码。请始终牢记，代码越少，开发效率越高。</p>
+<p><img src="http://i4.tietuku.com/94dd81a926d83cce.png" alt="Python"></p>
+<p>如果你还没有接触过Python，强烈建议学习<a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000" title="极力推荐">廖雪峰老师的教程</a>。</p>
+<h2 id="u4E00-_u4EE3_u7801_u98CE_u683C"><a href="#u4E00-_u4EE3_u7801_u98CE_u683C" class="headerlink" title="一.代码风格"></a>一.代码风格</h2><p>1.<strong>切片的妙用</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 奇数</span></span><br><span class="line">list(range(<span class="number">1</span>,<span class="number">101</span>)[<span class="number">0</span>::<span class="number">2</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">#偶数</span></span><br><span class="line">list(range(<span class="number">0</span>,<span class="number">100</span>)[<span class="number">0</span>::<span class="number">2</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 后10个数</span></span><br><span class="line">list(range(<span class="number">0</span>,<span class="number">100</span>)[-<span class="number">10</span>:])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用切片实现reverse</span></span><br><span class="line"><span class="comment"># 如果为负方向切片，则起始位置应比中指位置的索引大（从右向左）</span></span><br><span class="line"><span class="comment"># 如果为正方向切片，则起始位置比终止位置小（从左向右）</span></span><br><span class="line"><span class="comment"># 方向不同，则遍历的方向也不同，默认值也发生变化，不写时头尾变成尾头</span></span><br><span class="line">[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>][::-<span class="number">1</span>]</span><br><span class="line">[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>][-<span class="number">1</span>:-<span class="number">4</span>:-<span class="number">1</span>]</span><br><span class="line">[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>][<span class="number">3</span>::-<span class="number">1</span>] <span class="comment">#从索引3切到开头</span></span><br><span class="line">[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>][:<span class="number">1</span>:-<span class="number">1</span>] <span class="comment"># 从末尾切到索引1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 回文数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">is_palindrome</span><span class="params">(n)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> str(n)  == str(n)[::-<span class="number">1</span>]</span><br></pre></td></tr></table></figure></p>
+<p> 2.连续赋值方式<br> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 可以使用如下的赋值方式,加不加括号效果一样</span></span><br><span class="line">a,b,c = <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span></span><br><span class="line">a,b,c = (<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 交换swap,使用元组的方式</span></span><br><span class="line">a,b = b,a </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> x,y,z <span class="keyword">in</span> [(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>),(<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>)]:</span><br><span class="line">   print(x,y,z)</span><br></pre></td></tr></table></figure></p> 
+    </div>
+    <footer>
+		<div class="alignleft">
+		<a href="/2016/01/02/Python代码简洁之道/#more" class="more-link">Read more</a>
+		</div>
+		
+		<div class="comments-count">
+			
+			<a href="/2016/01/02/Python代码简洁之道/#comment" class="ds-thread-count icon-comment" data-thread-key="2016/01/02/Python代码简洁之道/" data-count-type="comments"></a>
+			
+		</div>
+		
+        <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <time datetime="2016-01-02T11:53:55.000Z"><a href="/2016/01/02/Python装X指南/">2016-01-02</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/01/02/Python装X指南/">Python装X指南</a></h1>
+  
+
+    </header>
+    <div class="entry">
+		<p><strong>人生苦短，我要装X</strong></p>
+<p>Python这门语言语法非常简洁，使用起来比java、c#等语言更方便，可能在一些高级语言中需要几十行几百行代码才能实现的功能，在Python中只需要几行。书写Python代码的时候往往力求Pythonic风格：代码越短越好，代码越短结构越清晰，给人直观上的压力也就越小。</p>
+<p>当然，如果你还没有接触过Python，强烈建议学习<a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000" title="极力推荐">廖雪峰老师的教程</a>。</p>
+<p><img src='http://i4.tietuku.com/6811dfe87a6876fd.jpg' style='width:200px;margin:0 auto' alt='带你装比带你飞' title='装比开始'/></p>
+<hr> 
+    </div>
+    <footer>
+		<div class="alignleft">
+		<a href="/2016/01/02/Python装X指南/#more" class="more-link">Read more</a>
+		</div>
+		
+		<div class="comments-count">
+			
+			<a href="/2016/01/02/Python装X指南/#comment" class="ds-thread-count icon-comment" data-thread-key="2016/01/02/Python装X指南/" data-count-type="comments"></a>
+			
+		</div>
+		
+        <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
         <time datetime="2016-01-02T09:28:49.000Z"><a href="/2016/01/02/my-new-post/">2016-01-02</a></time>
       
       
@@ -159,7 +255,7 @@
   <div class="search">
   <form action="//google.com/search" method="get" accept-charset="utf-8">
     <input type="search" name="q" results="0" placeholder="搜索">
-    <input type="hidden" name="q" value="site:yoursite.com">
+    <input type="hidden" name="q" value="site:/about">
   </form>
 </div>
 
@@ -167,6 +263,8 @@
 <div class="widget tag">
   <h3 class="title">分类</h3>
   <ul class="entry">
+  
+    <li><a href="/categories/Python/">Python</a><small>2</small></li>
   
     <li><a href="/categories/test/">test</a><small>1</small></li>
   
@@ -178,7 +276,7 @@
 <div class="widget tagcloud">
   <h3 class="title">标签云</h3>
   <div class="entry">
-    <a href="/tags/测试/" style="font-size: 10px;">测试</a>
+    <a href="/tags/Python/" style="font-size: 20px;">Python</a> <a href="/tags/测试/" style="font-size: 10px;">测试</a>
   </div>
 </div>
 
@@ -201,7 +299,7 @@
 	
 	
 	<section class="info">
-		<p> Hi,This my blog powered by Hexo and the Third theme. <br/>
+		<p> Hi,This my blog powered by Hexo and  Concise theme. <br/>
 			You can download this theme on github.</p>
 	</section>
 	 
@@ -211,7 +309,7 @@
 		
 		
 		
-		<a href="https://github.com/https://github.com/heriky" target="_blank" title="github"></a>
+		<a href="https://github.com/heriky" target="_blank" title="github"></a>
 		
 		
 		
@@ -221,7 +319,7 @@
 	</div>
 		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/huangjunhui/concise" target="_blank" title="Concise">Concise</a> © 2016 
 		
-		<a href="http://yoursite.com/about" target="_blank" title="Heriky">Heriky</a>
+		<a href="/about/about" target="_blank" title="Heriky">Heriky</a>
 		
 		</p>
 </div>
