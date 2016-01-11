@@ -15,15 +15,15 @@
 	})();
 	</script>
   
-  <title>Hello World | Heriky&#39;s Blog</title>
+  <title>jQuey与DOM前世今生 | Heriky&#39;s Blog</title>
   <meta name="author" content="Heriky">
   
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in ">
+  <meta name="description" content="一直使用jQuery操作dom，却迷迷糊糊搞不清楚jQuery对象和DOM原声对象之间的区别，导致在使用过程中经常在DOM对象上调用jQuery的特有方法而报错。时至今日，才终于搞清楚两者的区别：jQuery对象是dom数组的包装形式。">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="Hello World"/>
+  <meta property="og:title" content="jQuey与DOM前世今生"/>
   <meta property="og:site_name" content="Heriky&#39;s Blog"/>
 
   
@@ -81,34 +81,64 @@
   <div class="post-content">
     <header class="article-info clearfix">
   <h1 itemprop="name">
-	Hello World
+	jQuey与DOM前世今生
   </h1>
   <p class="article-author">By
     
       <a href="/about" title="Heriky">Heriky</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-01-02T08:39:07.945Z" itemprop="datePublished">2016-01-02</time>
-    更新日期:<time datetime="2016-01-02T08:39:07.945Z" itemprop="dateModified">2016-01-02</time>
+    <time datetime="2016-01-11T07:57:18.000Z" itemprop="datePublished">2016-01-11</time>
+    更新日期:<time datetime="2016-01-11T08:02:40.103Z" itemprop="dateModified">2016-01-11</time>
     
   </p>
 </header>
     <div class="entry">
 		
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start"><a href="#Quick_Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create_a_new_post"><a href="#Create_a_new_post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server"><a href="#Run_server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files"><a href="#Generate_static_files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites"><a href="#Deploy_to_remote_sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <p>一直使用jQuery操作dom，却迷迷糊糊搞不清楚jQuery对象和DOM原声对象之间的区别，导致在使用过程中经常在DOM对象上调用jQuery的特有方法而报错。时至今日，才终于搞清楚两者的区别：jQuery对象是dom数组的包装形式。</p>
+<p><img style="width:200px;" src="http://www.mantoufan.com/a/8/201503/14277766004044.jpg"></p>
+<a id="more"></a>
+<p>在使用jQuery来进行dom元素的操作时，可以使用其提供的一些方法，如：text(),attr(),eq()…etc</p>
+<p>但是如果没有清楚的认识jQuery对象和dom对象和原生dom对象的区别，经常会报出错误：<br><img src="http://i.imgur.com/Edzxe8M.png" alt=""></p>
+<p><strong>jQuery对象</strong>和<strong>原生dom对象</strong>的方法是不能互用，但是他们之间可以互相转换。</p>
+<ul>
+<li><p>Dom =&gt; jQuery</p>
+<p>  只需要在原生dom对象最完成套一层$()即可，如$(document.getElementById(‘header’))</p>
+</li>
+<li><p>jQuery =&gt; Dom</p>
+<p>  jQuery的的本质是一个<strong>数组对象</strong>（dom的数组），可以直接通过索引或者get(index)的方式得到dom对象，如$(‘#header’)[0]。</p>
+<p>  在任何情况下对jQuery对象进行索引都会将其变成dom对象，因此我们如果通过选择器得到一个<strong>jQuery对象的数组</strong>,想通过索引的方式取其中某个jquery对象，期待得到的是特定位置的jQuery对象，实际上得到的是dom对象：</p>
+<pre><code>var conJ = $(&apos;#main&apos;)       // 单个jQuery对象。每个jQuery对象实际上是dom对象数组
+var conD = $(&apos;#main&apos;)[0]    // 经过索引之后变成dom对象
+var conD = $(&apos;#main&apos;).get(0) // 同上      
 
+var contents = $(&apos;.content&apos;)     // n个jQuery对象组成的jQuery数组
+var content = $(&apos;.content&apos;)[3]   // 期待得到第4个jQuery对象，实际上索引之后变成了的dom对象
+[x] content.text()  // 期待取出来其中的文本，实际上会报错
+[√] content.innerText   // content已经成为dom对象，需要使用dom专用方法
+
+contents.eq(0).text()   //jQuery数组需通过eq(n)进行索引，得到的仍是jQuery对象
+</code></pre><p><strong>另外：</strong><br>尽管所有的jQuery对象都是数组对象，但是id选择器获得的jQuery对象长度为1，此时对该对象取任何属性.text() 或.html()或.eq()等都会直接去数组中第一个元素的值，但是对于类选择器，他的结果jQuery对象中有多个元素，此时如果使用绑定事件等方法，是可以绑定到每一个对象上的，但是调用text() / html()等这类方法，则只会得到第0号元素身上的值。如果要得到特定元素身上的值，则使用eq(index)来取。</p>
+</li>
+</ul>
+<p><strong>综上：</strong><br>    必须小心使用[ ]和get()对jQuery进行索引，一旦通过该两种方式索引，会自动转换为<br>dom对象，此时如果仍然调用text(),attr()等方法会直接报错。以下几种方式是等价的：</p>
+<pre><code>$(&apos;#cc&apos;)[0] &lt;=&gt; document.getElementById(&apos;cc&apos;)   
+$(&apos;.dd&apos;)[3] &lt;=&gt; $(&apos;.dd&apos;).eq(0)[3]&lt;=&gt; document.getElementById(&apos;dd&apos;)[3]
+</code></pre>
     </div>
     <footer>
         
+  
+  <div class="categories">
+    <a href="/categories/前端/">前端</a>
+  </div>
+
         
+  
+  <div class="tags">
+    <a href="/tags/jQuery/">jQuery</a>
+  </div>
+
 		<div class="bdsharebuttonbox">
 	<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
 	<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
@@ -154,8 +184,8 @@ with(document)0[
 
  <nav id="pagination" >
     
-    <a href="/2016/01/02/my-new-post/" class="alignleft prev" title="测试博客功能">测试博客功能</a>
     
+    <a href="/2016/01/02/Python代码简洁之道/" class="alignright next" title="Python代码简洁之道">Python代码简洁之道</a>
     
     <div class="clearfix"></div>
 </nav>
@@ -165,7 +195,7 @@ with(document)0[
 	
 	<section id="comment">
 		<!-- 多说评论框 start -->
-		<div class="ds-thread" data-thread-key="2016/01/02/hello-world/" data-title="Hello World" data-url="/about/2016/01/02/hello-world/"></div>
+		<div class="ds-thread" data-thread-key="2016/01/11/jQuey与DOM前世今生/" data-title="jQuey与DOM前世今生" data-url="/about/2016/01/11/jQuey与DOM前世今生/"></div>
 		<!-- 多说评论框 end -->
 		<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 		<script type="text/javascript">
