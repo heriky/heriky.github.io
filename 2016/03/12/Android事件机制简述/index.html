@@ -41,7 +41,7 @@
 <link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="jQuery," />
+  <meta name="keywords" content="Android,事件," />
 
 
 
@@ -57,18 +57,28 @@
 
 
 
-<meta name="description" content="一直使用jQuery操作dom，却迷迷糊糊搞不清楚jQuery对象和DOM原声对象之间的区别，导致在使用过程中经常在DOM对象上调用jQuery的特有方法而报错。时至今日，才终于搞清楚两者的区别：jQuery对象是dom数组的包装形式。">
+<meta name="description" content="View与ViewGroup
+View与事件相关的方法有onTouchEvent()、dispatchTouchEvent()
+ViewGroup与事件相关的方法有onTouchEvent()、onEvent()、onInterceptTouchEvent
+Activity可以当做ViewGroup来处理。
+ViewGroup是View的子类，ViewGroup重写了View中的dispatchT">
 <meta property="og:type" content="article">
-<meta property="og:title" content="jQuey与DOM前世今生">
-<meta property="og:url" content="/about/2016/01/11/jQuey与DOM前世今生/index.html">
+<meta property="og:title" content="Android事件机制简述">
+<meta property="og:url" content="/about/2016/03/12/Android事件机制简述/index.html">
 <meta property="og:site_name" content="Hankang's Blog">
-<meta property="og:description" content="一直使用jQuery操作dom，却迷迷糊糊搞不清楚jQuery对象和DOM原声对象之间的区别，导致在使用过程中经常在DOM对象上调用jQuery的特有方法而报错。时至今日，才终于搞清楚两者的区别：jQuery对象是dom数组的包装形式。">
-<meta property="og:image" content="http://www.mantoufan.com/a/8/201503/14277766004044.jpg">
-<meta property="og:image" content="http://i.imgur.com/Edzxe8M.png">
-<meta property="og:updated_time" content="2016-01-11T08:02:40.103Z">
+<meta property="og:description" content="View与ViewGroup
+View与事件相关的方法有onTouchEvent()、dispatchTouchEvent()
+ViewGroup与事件相关的方法有onTouchEvent()、onEvent()、onInterceptTouchEvent
+Activity可以当做ViewGroup来处理。
+ViewGroup是View的子类，ViewGroup重写了View中的dispatchT">
+<meta property="og:updated_time" content="2016-03-12T09:04:48.012Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="jQuey与DOM前世今生">
-<meta name="twitter:description" content="一直使用jQuery操作dom，却迷迷糊糊搞不清楚jQuery对象和DOM原声对象之间的区别，导致在使用过程中经常在DOM对象上调用jQuery的特有方法而报错。时至今日，才终于搞清楚两者的区别：jQuery对象是dom数组的包装形式。">
+<meta name="twitter:title" content="Android事件机制简述">
+<meta name="twitter:description" content="View与ViewGroup
+View与事件相关的方法有onTouchEvent()、dispatchTouchEvent()
+ViewGroup与事件相关的方法有onTouchEvent()、onEvent()、onInterceptTouchEvent
+Activity可以当做ViewGroup来处理。
+ViewGroup是View的子类，ViewGroup重写了View中的dispatchT">
 
 
 
@@ -86,7 +96,7 @@
   };
 </script>
 
-  <title> jQuey与DOM前世今生 | Hankang's Blog </title>
+  <title> Android事件机制简述 | Hankang's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -206,7 +216,7 @@
             
             
               
-                jQuey与DOM前世今生
+                Android事件机制简述
               
             
           </h1>
@@ -218,8 +228,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-01-11T15:57:18+08:00" content="2016-01-11">
-              2016-01-11
+            <time itemprop="dateCreated" datetime="2016-03-12T16:21:29+08:00" content="2016-03-12">
+              2016-03-12
             </time>
           </span>
 
@@ -232,8 +242,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/前端/" itemprop="url" rel="index">
-                    <span itemprop="name">前端</span>
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
                   </a>
                 </span>
 
@@ -248,8 +258,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/01/11/jQuey与DOM前世今生/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/11/jQuey与DOM前世今生/" itemprop="commentsCount"></span>
+                <a href="/2016/03/12/Android事件机制简述/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/12/Android事件机制简述/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -271,36 +281,24 @@
       
 
       
-        <p>一直使用jQuery操作dom，却迷迷糊糊搞不清楚jQuery对象和DOM原声对象之间的区别，导致在使用过程中经常在DOM对象上调用jQuery的特有方法而报错。时至今日，才终于搞清楚两者的区别：jQuery对象是dom数组的包装形式。</p>
-<p><img style="width:200px;" src="http://www.mantoufan.com/a/8/201503/14277766004044.jpg"></p>
-<a id="more"></a>
-<p>在使用jQuery来进行dom元素的操作时，可以使用其提供的一些方法，如：text(),attr(),eq()…etc</p>
-<p>但是如果没有清楚的认识jQuery对象和dom对象和原生dom对象的区别，经常会报出错误：<br><img src="http://i.imgur.com/Edzxe8M.png" alt=""></p>
-<p><strong>jQuery对象</strong>和<strong>原生dom对象</strong>的方法是不能互用，但是他们之间可以互相转换。</p>
-<ul>
-<li><p>Dom =&gt; jQuery</p>
-<p>  只需要在原生dom对象最完成套一层$()即可，如$(document.getElementById(‘header’))</p>
-</li>
-<li><p>jQuery =&gt; Dom</p>
-<p>  jQuery的的本质是一个<strong>数组对象</strong>（dom的数组），可以直接通过索引或者get(index)的方式得到dom对象，如$(‘#header’)[0]。</p>
-<p>  在任何情况下对jQuery对象进行索引都会将其变成dom对象，因此我们如果通过选择器得到一个<strong>jQuery对象的数组</strong>,想通过索引的方式取其中某个jquery对象，期待得到的是特定位置的jQuery对象，实际上得到的是dom对象：</p>
-<pre><code>var conJ = $(&apos;#main&apos;)       // 单个jQuery对象。每个jQuery对象实际上是dom对象数组
-var conD = $(&apos;#main&apos;)[0]    // 经过索引之后变成dom对象
-var conD = $(&apos;#main&apos;).get(0) // 同上      
-
-var contents = $(&apos;.content&apos;)     // n个jQuery对象组成的jQuery数组
-var content = $(&apos;.content&apos;)[3]   // 期待得到第4个jQuery对象，实际上索引之后变成了的dom对象
-[x] content.text()  // 期待取出来其中的文本，实际上会报错
-[√] content.innerText   // content已经成为dom对象，需要使用dom专用方法
-
-contents.eq(0).text()   //jQuery数组需通过eq(n)进行索引，得到的仍是jQuery对象
-</code></pre><p><strong>另外：</strong><br>尽管所有的jQuery对象都是数组对象，但是id选择器获得的jQuery对象长度为1，此时对该对象取任何属性.text() 或.html()或.eq()等都会直接去数组中第一个元素的值，但是对于类选择器，他的结果jQuery对象中有多个元素，此时如果使用绑定事件等方法，是可以绑定到每一个对象上的，但是调用text() / html()等这类方法，则只会得到第0号元素身上的值。如果要得到特定元素身上的值，则使用eq(index)来取。</p>
-</li>
+        <h2 id="View_u4E0EViewGroup"><a href="#View_u4E0EViewGroup" class="headerlink" title="View与ViewGroup"></a>View与ViewGroup</h2><ul>
+<li>View与事件相关的方法有onTouchEvent()、dispatchTouchEvent()</li>
+<li>ViewGroup与事件相关的方法有onTouchEvent()、onEvent()、onInterceptTouchEvent</li>
+<li>Activity可以当做ViewGroup来处理。</li>
+<li>ViewGroup是View的子类，ViewGroup重写了View中的dispatchTouchEvent()，并添加了onInterceptTouchEvent()</li>
 </ul>
-<p><strong>综上：</strong><br>    必须小心使用[ ]和get()对jQuery进行索引，一旦通过该两种方式索引，会自动转换为<br>dom对象，此时如果仍然调用text(),attr()等方法会直接报错。以下几种方式是等价的：</p>
-<pre><code>$(&apos;#cc&apos;)[0] &lt;=&gt; document.getElementById(&apos;cc&apos;)   
-$(&apos;.dd&apos;)[3] &lt;=&gt; $(&apos;.dd&apos;).eq(0)[3]&lt;=&gt; document.getElementById(&apos;dd&apos;)[3]
-</code></pre>
+<h3 id="1-_u4E8B_u4EF6_u5206_u53D1_u8FC7_u7A0B"><a href="#1-_u4E8B_u4EF6_u5206_u53D1_u8FC7_u7A0B" class="headerlink" title="1.事件分发过程"></a>1.事件分发过程</h3><p>Touch事件发生时，事件从顶层ViewGroup，调用ViewGroup的、dispatchTouchEvent()进行事件分发，事件分发到子View或子ViewGroup。<br><a id="more"></a><br>ViewGroup执行事件分发的过程实际上就是逐个调用其子View/ViewGroup中的dispatchTouchEvent(),调用过程的伪代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent e)</span></span>&#123;</span><br><span class="line">	....</span><br><span class="line">	View[] views = getChildViews();</span><br><span class="line">	<span class="keyword">for</span>(View v in views)&#123;</span><br><span class="line">		<span class="keyword">if</span>(v.dispatchTouchEvent(e))&#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">true</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>子ViewGroup收到事件，会继续调用自己的dispatchTouchEvent()将该事件进一步向下分发；子View收到事件，会调用自己的dispatchTouchEvent()将事件分发给自己，在子View的dispatchTouchEvent()方法中实际上又调用了onTouchEvent(),简化版代码如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent e)</span></span>&#123;</span><br><span class="line">	...</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.onTouchEvent()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因此默认情况下，dispatchTouchEvent的返回值与onTouchEvent一致。</p>
+<h3 id="2-_u5BF9_u8C61_u6355_u83B7_u8FC7_u7A0B"><a href="#2-_u5BF9_u8C61_u6355_u83B7_u8FC7_u7A0B" class="headerlink" title="2.对象捕获过程"></a>2.对象捕获过程</h3><blockquote>
+<p>事件从顶层分发到底层，该过程是为了宣召执行事件的响应的目标。</p>
+</blockquote>
+<p>Android屏幕事件从<code>ACTION_DOWN</code>开始，之后会触发<code>ACTION_MOVE</code>和<code>ACTION_UP</code>等事件。<br>当屏幕事件触发时，首先发出<code>ACTION_DOWN</code>事件进行探测，寻找后续事件执行的目标，即如果某个子View的onTouchEvent返回true，则表示该View消耗该事件，后续事件执行的目标就确定为该View。该过程调用流程为：ViewGroup执行dispatchTouchEvent -&gt; 子View执行dispatchTouchEvent -&gt; 子View执行nTouchEvent。事件响应目标确定后，后续<code>ACTION_MOVE</code>等事件会直接在该目标上执行。当没有找到目标时，事件交给ViewGroup处理，ViewGroup调用它自身的onTouchEvent进行处理(实际上是ViewGroup调用父类View的方法super.dispatchTouchEvent(),View中的dispatchTouchEvent()调用onTouchEvent,而刚好ViewGroup覆写了该方法)。<br>ViewGroup还有一个onInterceptTouchEvent() 方法，表示事件拦截。当该方法返回true时，事件被拦截在ViewGroup层，无法继续分发到子View，此时事件的处理就会在ViewGroup中处理。<br>以上的过程，类似于打仗中的情景。两军交战，首先派侦察兵去敌方阵营侦察目标,找到目标后，发回成功信号，则任务就会在该目标处执行,如果发生了意外，侦察兵被拦截了，则任务会在本方阵营执行。军官通过dispatchTouchEvent()方法命令侦察兵去执行任务(这里ACTION_DOWN事件就扮演了侦察兵的角色),发回的成功信号即子View的onTouchEvent返回了true，如果onInterceptTouchEvent()返回true，则表示发生了意外，后续任务只能在本方阵营执行(ViewGroup调用onTouchEvent处理事件)。<br>整个过程伪代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">View mTarget = <span class="keyword">null</span> ;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent e)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(e.getEventType == ACTION_DOWN)&#123;</span><br><span class="line">		mTarget = <span class="keyword">null</span> ; <span class="comment">// 每次触发ACTION_DOWN表示重新寻找目标</span></span><br><span class="line">		<span class="keyword">if</span> (!onInterceptTouchEvent()) &#123;</span><br><span class="line">			View[] views = getChildViews();</span><br><span class="line">			<span class="keyword">for</span>(View v in views)&#123;</span><br><span class="line">				<span class="keyword">if</span>(v.dispatchTouchEvent(e))&#123;</span><br><span class="line">					<span class="keyword">return</span> <span class="keyword">true</span></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (mTarget == <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">super</span>.dispatchTouchEvent(e) ; <span class="comment">// 实际上最终调用了this.onTouchEvent()</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 拦截事件的处理方式 </span></span><br><span class="line">	<span class="keyword">if</span>(onInterceptTouchEvent())&#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 此处mTarget 不为空，表示目标确定，后续事件直接处理</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> mTarget.dispatchTouchEvent()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另外，ViewGroup的dispatchTouchEvent实际上做了两件事：事件分发(调用子View的方法)和事件处理(调用自己的onTouchEvent)，<br>View的dispatchTouchEvent只是简单的将事件发给自己，并调用了onTouchEvent返回处理结果。</p>
+
       
     </div>
 
@@ -314,7 +312,9 @@ $(&apos;.dd&apos;)[3] &lt;=&gt; $(&apos;.dd&apos;).eq(0)[3]&lt;=&gt; document.ge
       
         <div class="post-tags">
           
-            <a href="/tags/jQuery/" rel="tag">#jQuery</a>
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+            <a href="/tags/事件/" rel="tag">#事件</a>
           
         </div>
       
@@ -323,17 +323,13 @@ $(&apos;.dd&apos;)[3] &lt;=&gt; $(&apos;.dd&apos;).eq(0)[3]&lt;=&gt; document.ge
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/01/02/Python代码简洁之道（二）/" rel="next" title="Python代码简洁之道(二)">
-                <i class="fa fa-chevron-left"></i> Python代码简洁之道(二)
+              <a href="/2016/01/11/jQuey与DOM前世今生/" rel="next" title="jQuey与DOM前世今生">
+                <i class="fa fa-chevron-left"></i> jQuey与DOM前世今生
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/03/12/Android事件机制简述/" rel="prev" title="Android事件机制简述">
-                Android事件机制简述 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -359,8 +355,8 @@ $(&apos;.dd&apos;)[3] &lt;=&gt; $(&apos;.dd&apos;).eq(0)[3]&lt;=&gt; document.ge
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/01/11/jQuey与DOM前世今生/"
-           data-title="jQuey与DOM前世今生" data-url="/about/2016/01/11/jQuey与DOM前世今生/">
+      <div class="ds-thread" data-thread-key="2016/03/12/Android事件机制简述/"
+           data-title="Android事件机制简述" data-url="/about/2016/03/12/Android事件机制简述/">
       </div>
     
   </div>
@@ -480,7 +476,7 @@ $(&apos;.dd&apos;)[3] &lt;=&gt; $(&apos;.dd&apos;).eq(0)[3]&lt;=&gt; document.ge
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#View_u4E0EViewGroup"><span class="nav-number">1.</span> <span class="nav-text">View与ViewGroup</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-_u4E8B_u4EF6_u5206_u53D1_u8FC7_u7A0B"><span class="nav-number">1.1.</span> <span class="nav-text">1.事件分发过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-_u5BF9_u8C61_u6355_u83B7_u8FC7_u7A0B"><span class="nav-number">1.2.</span> <span class="nav-text">2.对象捕获过程</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
